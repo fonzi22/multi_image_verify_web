@@ -1,0 +1,310 @@
+[
+  {
+    "sample_id": "demo_001",
+    "query": {
+      "question": "What material are the blue books?",
+      "target_object": "Book",
+      "condition_attribute": {
+        "type": "color",
+        "value": "blue"
+      },
+      "target_attribute_type": "material"
+    },
+    "answer": {
+      "list": [
+        "paper/cardboard"
+      ],
+      "split_comma": "paper/cardboard",
+      "freeform": "The blue books are paper/cardboard."
+    },
+    "K_gt_images": 1,
+    "ground_truth": [
+      {
+        "image_id": "demo_001",
+        "local_path": "data/pilot_5000_images/demo_001.jpg",
+        "resolution": {
+          "width": 640,
+          "height": 400
+        },
+        "gt_bboxes": [
+          {
+            "image_id": "demo_001",
+            "bbox_id": "demo_001_bbox",
+            "local_path": "data/pilot_5000_images/demo_001.jpg",
+            "crop_path": "data/crops/demo_001_bbox.jpg",
+            "object": "Book",
+            "bbox_norm": [
+              0.453125,
+              0.45,
+              0.484375,
+              0.48
+            ],
+            "bbox_pixel": [
+              290,
+              180,
+              310,
+              192
+            ],
+            "area_ratio": 0.0009375,
+            "size_category": "small",
+            "attributes": {
+              "color": "blue",
+              "material": "paper/cardboard",
+              "state": "closed"
+            },
+            "is_clear_object": true,
+            "confidence_score": 1.0
+          }
+        ]
+      }
+    ],
+    "ground_truth_progression": {
+      "K_1": {
+        "K": 1,
+        "gold_image_ids": [
+          "demo_001"
+        ],
+        "answer": {
+          "list": [
+            "paper/cardboard"
+          ],
+          "split_comma": "paper/cardboard",
+          "freeform": "The blue books are paper/cardboard."
+        }
+      }
+    },
+    "pools": {
+      "N_5": {
+        "N": 5,
+        "K": 1,
+        "num_hard_distractors": 2,
+        "num_other_images": 2,
+        "images": [
+          {
+            "image_id": "demo_001",
+            "role": "gold",
+            "pool_index": 0
+          },
+          {
+            "image_id": "demo_015",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 1
+          },
+          {
+            "image_id": "demo_003",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 2
+          },
+          {
+            "image_id": "demo_014",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 3
+          },
+          {
+            "image_id": "demo_002",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 4
+          }
+        ]
+      },
+      "N_10": {
+        "N": 10,
+        "K": 1,
+        "num_hard_distractors": 4,
+        "num_other_images": 5,
+        "images": [
+          {
+            "image_id": "demo_001",
+            "role": "gold",
+            "pool_index": 0
+          },
+          {
+            "image_id": "demo_015",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 1
+          },
+          {
+            "image_id": "demo_003",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 2
+          },
+          {
+            "image_id": "demo_014",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 3
+          },
+          {
+            "image_id": "demo_002",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 4
+          },
+          {
+            "image_id": "demo_017",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 5
+          },
+          {
+            "image_id": "demo_016",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 6
+          },
+          {
+            "image_id": "demo_004",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 7
+          },
+          {
+            "image_id": "demo_018",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 8
+          },
+          {
+            "image_id": "demo_005",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 9
+          }
+        ]
+      },
+      "N_20": {
+        "N": 20,
+        "K": 1,
+        "num_hard_distractors": 8,
+        "num_other_images": 11,
+        "images": [
+          {
+            "image_id": "demo_001",
+            "role": "gold",
+            "pool_index": 0
+          },
+          {
+            "image_id": "demo_015",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 1
+          },
+          {
+            "image_id": "demo_003",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 2
+          },
+          {
+            "image_id": "demo_014",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 3
+          },
+          {
+            "image_id": "demo_002",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 4
+          },
+          {
+            "image_id": "demo_017",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 5
+          },
+          {
+            "image_id": "demo_016",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 6
+          },
+          {
+            "image_id": "demo_004",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 7
+          },
+          {
+            "image_id": "demo_018",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 8
+          },
+          {
+            "image_id": "demo_005",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 9
+          },
+          {
+            "image_id": "demo_009",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 10
+          },
+          {
+            "image_id": "demo_008",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 11
+          },
+          {
+            "image_id": "demo_019",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 12
+          },
+          {
+            "image_id": "demo_024",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 13
+          },
+          {
+            "image_id": "demo_020",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 14
+          },
+          {
+            "image_id": "demo_022",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 15
+          },
+          {
+            "image_id": "demo_006",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 16
+          },
+          {
+            "image_id": "demo_021",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 17
+          },
+          {
+            "image_id": "demo_007",
+            "role": "hard_distractor",
+            "reason": "Red book does not match blue condition",
+            "pool_index": 18
+          },
+          {
+            "image_id": "demo_023",
+            "role": "other",
+            "reason": "Negative image containing no target object",
+            "pool_index": 19
+          }
+        ]
+      }
+    }
+  }
+]

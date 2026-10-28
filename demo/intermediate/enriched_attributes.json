@@ -1,0 +1,366 @@
+[
+  {
+    "image_id": "demo_001",
+    "bbox_id": "demo_001_bbox",
+    "local_path": "data/pilot_5000_images/demo_001.jpg",
+    "crop_path": "data/crops/demo_001_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "blue",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_002",
+    "bbox_id": "demo_002_bbox",
+    "local_path": "data/pilot_5000_images/demo_002.jpg",
+    "crop_path": "data/crops/demo_002_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_003",
+    "bbox_id": "demo_003_bbox",
+    "local_path": "data/pilot_5000_images/demo_003.jpg",
+    "crop_path": "data/crops/demo_003_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_004",
+    "bbox_id": "demo_004_bbox",
+    "local_path": "data/pilot_5000_images/demo_004.jpg",
+    "crop_path": "data/crops/demo_004_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_005",
+    "bbox_id": "demo_005_bbox",
+    "local_path": "data/pilot_5000_images/demo_005.jpg",
+    "crop_path": "data/crops/demo_005_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_006",
+    "bbox_id": "demo_006_bbox",
+    "local_path": "data/pilot_5000_images/demo_006.jpg",
+    "crop_path": "data/crops/demo_006_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_007",
+    "bbox_id": "demo_007_bbox",
+    "local_path": "data/pilot_5000_images/demo_007.jpg",
+    "crop_path": "data/crops/demo_007_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_008",
+    "bbox_id": "demo_008_bbox",
+    "local_path": "data/pilot_5000_images/demo_008.jpg",
+    "crop_path": "data/crops/demo_008_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_009",
+    "bbox_id": "demo_009_bbox",
+    "local_path": "data/pilot_5000_images/demo_009.jpg",
+    "crop_path": "data/crops/demo_009_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_010",
+    "bbox_id": "demo_010_bbox",
+    "local_path": "data/pilot_5000_images/demo_010.jpg",
+    "crop_path": "data/crops/demo_010_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_011",
+    "bbox_id": "demo_011_bbox",
+    "local_path": "data/pilot_5000_images/demo_011.jpg",
+    "crop_path": "data/crops/demo_011_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_012",
+    "bbox_id": "demo_012_bbox",
+    "local_path": "data/pilot_5000_images/demo_012.jpg",
+    "crop_path": "data/crops/demo_012_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  },
+  {
+    "image_id": "demo_013",
+    "bbox_id": "demo_013_bbox",
+    "local_path": "data/pilot_5000_images/demo_013.jpg",
+    "crop_path": "data/crops/demo_013_bbox.jpg",
+    "object": "Book",
+    "bbox_norm": [
+      0.453125,
+      0.45,
+      0.484375,
+      0.48
+    ],
+    "bbox_pixel": [
+      290,
+      180,
+      310,
+      192
+    ],
+    "area_ratio": 0.0009375,
+    "size_category": "small",
+    "attributes": {
+      "color": "red",
+      "material": "paper/cardboard",
+      "state": "closed"
+    },
+    "is_clear_object": true,
+    "confidence_score": 1.0
+  }
+]

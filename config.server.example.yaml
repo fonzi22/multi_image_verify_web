@@ -1,0 +1,15 @@
+# Copy to config.local.yaml and adjust for your own dataset.
+# This example matches the existing multi_image_visual_search dataset.
+paths:
+  output_json: data/output/samples.json
+  enriched_attributes_json: data/intermediate/enriched_attributes.json
+  filtered_bboxes_json: data/intermediate/filtered_bboxes_20000.json
+  image_urls_json: data/intermediate/image_urls_20000.json
+  image_dirs:
+    - data/pilot_5000_images
+    - data/pilot_10000_images
+    - data/pilot_1000_images
+  crops_dir: data/crops
+
+qa_generation:
+  negative_hard_ratio: 0.40

@@ -1,0 +1,20 @@
+# Private datasets and verification output
+/data/
+/reviews/
+/reviews-*/
+/config.local.yaml
+/.env
+/.env.*
+!/.env.example
+*.log
+*.tmp
+
+# Python and editors
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+.idea/
+.vscode/

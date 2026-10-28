@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Image Visual Search – Kiểm Tra & Chỉnh Sửa Sample Thủ Công</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #090d16;
+      --bg-surface: #111827;
+      --bg-card: #182234;
+      --bg-card-hover: #1e2b42;
+      --border-subtle: #24324a;
+      --border-focus: #3b82f6;
+      --text-main: #f3f4f6;
+      --text-muted: #94a3b8;
+      --accent-primary: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 12px;
+      --grid-cols: 4;
+      --img-max-height: 180px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      background: linear-gradient(180deg, #131c2e 0%, var(--bg-base) 100%);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.5rem 1.15rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+      z-index: 40;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      color: white;
+      font-weight: 800;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: var(--radius-sm);
+      letter-spacing: 0.05em;
+    }
+
+    .brand h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .stat-pill {
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.48rem 0.95rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: white;
+    }
+    .btn-primary:hover { filter: brightness(1.1); }
+
+    .btn-success {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: white;
+    }
+    .btn-success:hover { filter: brightness(1.1); }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
+      color: #090d16;
+    }
+    .btn-warning:hover { filter: brightness(1.1); }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+    }
+    .btn-danger:hover {
+      background: var(--accent-red);
+      color: white;
+    }
+
+    .btn-outline {
+      background: var(--bg-surface);
+      border-color: var(--border-subtle);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent-primary);
+      background: var(--bg-card);
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 265px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-filters {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .input-ctrl, .select-ctrl {
+      width: 100%;
+      background: #0b111e;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.45rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+    .input-ctrl:focus, .select-ctrl:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem;
+    }
+
+    .sample-list {
+      list-style: none;
+      padding: 0.5rem;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .sample-item {
+      padding: 0.7rem 0.85rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      background: rgba(24, 34, 52, 0.45);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .sample-item:hover {
+      background: var(--bg-card);
+      border-color: var(--border-subtle);
+    }
+    .sample-item.active {
+      background: var(--bg-card);
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 1px var(--accent-primary);
+    }
+
+    .sample-item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sample-id {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .status-badge {
+      font-size: 0.68rem;
+      padding: 0.12rem 0.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .status-pending { background: rgba(148, 163, 184, 0.18); color: var(--text-muted); }
+    .status-pass { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+    .status-fixed { background: rgba(59, 130, 246, 0.22); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+    .status-no_valid_gt { background: rgba(239, 68, 68, 0.22); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+
+    .tag-sm {
+      font-size: 0.7rem;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      display: inline-block;
+    }
+
+    /* Main Content */
+    .content-area {
+      overflow-y: auto;
+      padding: 0.75rem 1.15rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    /* Banner */
+    .query-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: var(--radius-lg);
+      padding: 0.7rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .banner-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .query-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .query-details {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .query-details strong { color: var(--text-main); }
+
+    .answer-box {
+      padding: 0.4rem 0.75rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius-sm);
+      color: #6ee7b7;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    /* Review & Repair Panel */
+    .review-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 0.75rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .review-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 1300px) {
+      .case-grid { grid-template-columns: 1fr; }
+    }
+
+    .case-box {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.65rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+    .case-box.active-error {
+      border-color: var(--accent-orange);
+      box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
+    }
+
+    .case-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+    .toggle-label input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent-orange);
+      cursor: pointer;
+    }
+
+    .error-type-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    .error-type-btn {
+      padding: 0.55rem 0.65rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .error-type-btn:hover {
+      border-color: var(--accent-primary);
+      color: var(--text-main);
+    }
+    .error-type-btn.active {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: var(--accent-orange);
+      color: #fde68a;
+    }
+
+    .sub-panel {
+      background: rgba(9, 13, 22, 0.65);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .sub-panel-title {
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: #93c5fd;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .no-gt-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 0.85rem;
+      border-radius: 6px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* Suggestions List */
+    .suggestions-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .suggestion-item {
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      background: rgba(24, 34, 52, 0.85);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+    }
+    .suggestion-item:hover {
+      border-color: var(--accent-primary);
+    }
+
+    .suggestion-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .retain-badge {
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      font-weight: 700;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      white-space: nowrap;
+    }
+
+    .manual-qa-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+
+    /* Images Grid */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .images-grid {
+      display: grid;
+      grid-template-columns: repeat(var(--grid-cols, 4), minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .image-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.15s;
+    }
+
+    .image-card.gold-kept {
+      border-color: var(--accent-green);
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.12);
+    }
+
+    .image-card.gold-dropped {
+      border-color: var(--accent-red);
+      opacity: 0.55;
+    }
+
+    .image-card.distractor-card {
+      border-top: 3px solid var(--accent-orange);
+    }
+
+    .image-card.other-card {
+      border-top: 3px solid #64748b;
+    }
+
+    .card-header {
+      padding: 0.32rem 0.55rem;
+      background: rgba(0, 0, 0, 0.28);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.7rem;
+    }
+
+    .role-badge {
+      padding: 0.1rem 0.38rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+    }
+    .badge-gold { background: rgba(16, 185, 129, 0.22); color: #34d399; }
+    .badge-hard { background: rgba(245, 158, 11, 0.22); color: #fbbf24; }
+    .badge-other { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; }
+
+    .img-container {
+      position: relative;
+      background: #000;
+      height: var(--img-max-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-in;
+      overflow: hidden;
+    }
+
+    .img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .bbox-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .crop-panel {
+      padding: 0.4rem 0.55rem;
+      background: rgba(15, 23, 42, 0.75);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .crop-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+    }
+
+    .crop-thumb {
+      width: 68px;
+      height: 48px;
+      background: #000;
+      border: 1.5px solid var(--accent-green);
+      border-radius: 4px;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: zoom-in;
+    }
+    .crop-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .attr-edit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.22rem;
+      flex: 1;
+    }
+
+    .attr-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.06rem;
+    }
+    .attr-field label {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .attr-field select, .attr-field input {
+      background: #090d16;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.12rem 0.25rem;
+      border-radius: 3px;
+      font-size: 0.68rem;
+      width: 100%;
+    }
+
+    .card-footer {
+      padding: 0.32rem 0.55rem;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.18);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-backdrop.active { display: flex; }
+
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      width: min(1280px, 95vw);
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85);
+    }
+
+    .modal-header {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 1.25rem 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      background: #059669;
+      color: white;
+      padding: 0.7rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      z-index: 200;
+      display: none;
+    }
+    .toast.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-badge">REVIEW & REPAIR</div>
+      <h1>Multi-Image Visual Search – Kiểm Tra & Chỉnh Sửa Sample Thủ Công</h1>
+    </div>
+
+    <div class="header-stats">
+      <span class="stat-pill">Tổng: <strong id="stat-total">0</strong></span>
+      <span class="stat-pill" style="color:#34d399;">Đạt chuẩn: <strong id="stat-pass">0</strong></span>
+      <span class="stat-pill" style="color:#60a5fa;">Đã sửa: <strong id="stat-fixed">0</strong></span>
+      <span class="stat-pill" style="color:#f87171;">Loại bỏ (0 GT): <strong id="stat-nogt">0</strong></span>
+      <span class="stat-pill" style="color:#94a3b8;">Chưa duyệt: <strong id="stat-pending">0</strong></span>
+    </div>
+
+    <div class="header-actions">
+      <div style="display:flex; align-items:center; gap:0.35rem; font-size:0.76rem; color:var(--text-muted);">
+        <span>Bố cục:</span>
+        <select id="card-size-select" class="select-ctrl" style="width:auto; padding:0.3rem 0.5rem; font-size:0.76rem;" onchange="setCardSize(this.value)">
+          <option value="6">6 ảnh / hàng (Nhỏ)</option>
+          <option value="5">5 ảnh / hàng (Vừa nhỏ)</option>
+          <option value="4" selected>4 ảnh / hàng (Mặc định)</option>
+          <option value="3">3 ảnh / hàng (Lớn)</option>
+          <option value="2">2 ảnh / hàng (Rất lớn)</option>
+        </select>
+      </div>
+      <button class="btn btn-outline" onclick="navSample(-1)">⬅️ Trước</button>
+      <button class="btn btn-outline" onclick="navSample(1)">Tiếp ➡️</button>
+      <button class="btn btn-primary" onclick="exportVerifiedJSON()">⬇️ Xuất JSON Đã Duyệt</button>
+    </div>
+  </header>
+
+  <div class="main-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-filters">
+        <input type="text" id="search-input" class="input-ctrl" placeholder="Tìm sample_id, object, câu hỏi..." oninput="renderSidebar()">
+        <div class="filter-row">
+          <select id="filter-status" class="select-ctrl" onchange="renderSidebar()">
+            <option value="all">Tất cả trạng thái</option>
+            <option value="pending">Chưa duyệt (Pending)</option>
+            <option value="pass">Đạt chuẩn (Pass)</option>
+            <option value="fixed">Đã sửa & Lưu (Fixed)</option>
+            <option value="no_valid_gt">Không có GT đúng</option>
+          </select>
+          <select id="filter-k" class="select-ctrl" onchange="renderSidebar()">
+            <option value="all">Tất cả K</option>
+            <option value="4">K = 4</option>
+            <option value="3">K = 3</option>
+            <option value="2">K = 2</option>
+            <option value="1">K = 1</option>
+          </select>
+        </div>
+      </div>
+      <ul class="sample-list" id="sample-list"></ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-area" id="main-content">
+      <!-- Query Banner -->
+      <section class="query-banner" id="query-banner"></section>
+
+      <!-- Manual Inspection & 2 Error Cases Panel -->
+      <section class="review-panel">
+        <div class="review-top-bar">
+          <div>
+            <h3 style="font-size:1rem; font-weight:800;">Bảng Kiểm Tra & Xử Lý Lỗi Sample</h3>
+            <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">
+              Nếu sample đã đạt chuẩn hoàn toàn, bấm <strong>"Sample Đạt Chuẩn (Save Pass)"</strong>. Nếu có lỗi ở GT Group hoặc ảnh ngoài GT, bật trường hợp tương ứng bên dưới rồi bấm <strong>"Lưu Chỉnh Sửa Sample"</strong>.
+            </p>
+          </div>
+          <div style="display:flex; gap:0.6rem; align-items:center;">
+            <button class="btn btn-outline" onclick="resetCurrentSample()">↺ Khôi phục gốc</button>
+            <button class="btn btn-success" onclick="quickSavePass()">✅ Sample Đạt Chuẩn (Save Pass)</button>
+            <button class="btn btn-primary" onclick="saveCurrentSample()">💾 Lưu Chỉnh Sửa Sample</button>
+          </div>
+        </div>
+
+        <div class="case-grid">
+          <!-- CASE 1: GT GROUP SAI -->
+          <div class="case-box" id="case1-box">
+            <div class="case-header">
+              <label class="toggle-label">
+                <input type="checkbox" id="chk-gt-error" onchange="onToggleGtError()">
+                <span>Trường hợp 1: GT Group bị sai</span>
+              </label>
+              <span class="tag-sm" id="gt-kept-summary">Đang giữ: 0/0 ảnh GT</span>
+            </div>
+
+            <div id="gt-error-controls" style="display:none; flex-direction:column; gap:0.8rem;">
+              <!-- 3 Subtypes -->
+              <div>
+                <div style="font-size:0.76rem; color:var(--text-muted); margin-bottom:0.35rem; font-weight:600;">
+                  Chọn loại lỗi GT Group (3 tình huống):
+                </div>
+                <div class="error-type-tabs">
+                  <button type="button" class="error-type-btn" id="btn-err-attr" onclick="setGtErrorType('attribute_wrong')">
+                    1.1 Attribute bị sai<br><span style="font-weight:400; font-size:0.7rem;">(Câu hỏi OK)</span>
+                  </button>
+                  <button type="button" class="error-type-btn" id="btn-err-q" onclick="setGtErrorType('question_wrong')">
+                    1.2 Câu hỏi bị sai<br><span style="font-weight:400; font-size:0.7rem;">(Đề xuất câu hỏi mới)</span>
+                  </button>
+                  <button type="button" class="error-type-btn" id="btn-err-both" onclick="setGtErrorType('both_wrong')">
+                    1.3 Cả 2 tình huống trên<br><span style="font-weight:400; font-size:0.7rem;">(Sửa cả Attribute & Câu hỏi)</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Explanation -->
+              <div>
+                <label style="font-size:0.76rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:0.25rem;">
+                  Giải thích chi tiết lỗi GT Group:
+                </label>
+                <textarea id="gt-error-explanation" class="input-ctrl" rows="2" placeholder="Nhập giải thích vì sao câu hỏi hoặc attribute của ảnh GT bị sai..."></textarea>
+              </div>
+
+              <!-- Sub-panel 1.1: Select valid GT images / No valid GT option -->
+              <div class="sub-panel" id="subpanel-1-1">
+                <div class="sub-panel-title">
+                  <span>1.1 Chọn ảnh GT đúng & Sửa Attribute trên thẻ ảnh GT bên dưới</span>
+                  <div style="display:flex; gap:0.4rem;">
+                    <button type="button" class="btn btn-outline" style="padding:0.2rem 0.55rem; font-size:0.72rem;" onclick="selectAllGt(true)">Chọn tất cả GT</button>
+                  </div>
+                </div>
+                <div style="font-size:0.77rem; color:var(--text-muted);">
+                  • Tick chọn những ảnh GT đúng ở phần <strong>Ground Truth Images</strong> bên dưới (hoặc sửa lại giá trị attribute trực tiếp trên ảnh GT) rồi bấm <strong>Lưu Chỉnh Sửa Sample</strong>.<br>
+                  • Nếu <strong>không có ảnh GT nào đúng luôn</strong>, bật tùy chọn bên dưới:
+                </div>
+                <div class="no-gt-banner">
+                  <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+                    <input type="checkbox" id="chk-no-valid-gt" style="width:16px; height:16px; accent-color:#ef4444;" onchange="onToggleNoValidGt()">
+                    <span>🚫 Không có ảnh GT nào đúng luôn (Loại bỏ toàn bộ GT của sample này)</span>
+                  </label>
+                  <button type="button" class="btn btn-danger" style="padding:0.28rem 0.65rem; font-size:0.74rem;" onclick="saveNoValidGtDirectly()">Lưu "Không có ảnh đúng"</button>
+                </div>
+              </div>
+
+              <!-- Sub-panel 1.2: Question Suggestions & Question Editor -->
+              <div class="sub-panel" id="subpanel-1-2">
+                <div class="sub-panel-title">
+                  <span>1.2 Đề xuất sửa lại câu hỏi (Giữ lại nhiều ảnh GT đúng nhất)</span>
+                  <button type="button" class="btn btn-outline" style="padding:0.2rem 0.55rem; font-size:0.72rem;" onclick="refreshSuggestions()">🔄 Tính lại đề xuất</button>
+                </div>
+                <div class="suggestions-list" id="suggestions-list"></div>
+
+                <div style="border-top:1px solid var(--border-subtle); padding-top:0.65rem; display:flex; flex-direction:column; gap:0.5rem;">
+                  <div style="font-size:0.76rem; font-weight:700; color:#cbd5e1;">
+                    Chỉnh sửa Câu hỏi & Đáp án (Tự động hoặc Thủ công):
+                  </div>
+                  <div class="manual-qa-grid">
+                    <div>
+                      <label style="font-size:0.7rem; color:var(--text-muted);">Condition Attribute Type</label>
+                      <select id="edit-cond-type" class="select-ctrl" onchange="onChangeManualQueryAttrs()"></select>
+                    </div>
+                    <div>
+                      <label style="font-size:0.7rem; color:var(--text-muted);">Condition Attribute Value</label>
+                      <input type="text" id="edit-cond-val" class="input-ctrl" oninput="onChangeManualQueryAttrs()">
+                    </div>
+                    <div>
+                      <label style="font-size:0.7rem; color:var(--text-muted);">Target Attribute Type</label>
+                      <select id="edit-target-type" class="select-ctrl" onchange="onChangeManualQueryAttrs()"></select>
+                    </div>
+                  </div>
+                  <div>
+                    <label style="font-size:0.7rem; color:var(--text-muted);">Câu hỏi (Question):</label>
+                    <input type="text" id="edit-question-text" class="input-ctrl">
+                  </div>
+                  <div class="filter-row">
+                    <div>
+                      <label style="font-size:0.7rem; color:var(--text-muted);">Answer List (cách nhau dấu phẩy):</label>
+                      <input type="text" id="edit-answer-list" class="input-ctrl" oninput="onEditAnswerList()">
+                    </div>
+                    <div>
+                      <label style="font-size:0.7rem; color:var(--text-muted);">Answer Freeform:</label>
+                      <input type="text" id="edit-answer-freeform" class="input-ctrl">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CASE 2: CÁC ẢNH KHÁC GT SAI -->
+          <div class="case-box" id="case2-box">
+            <div class="case-header">
+              <label class="toggle-label">
+                <input type="checkbox" id="chk-non-gt-error" onchange="onToggleNonGtError()">
+                <span>Trường hợp 2: Các ảnh khác GT (Distractor / Other) bị sai</span>
+              </label>
+              <span class="tag-sm" id="non-gt-replace-count">Đã thay: 0 ảnh</span>
+            </div>
+
+            <div style="font-size:0.8rem; color:var(--text-muted); line-height:1.45;">
+              • Nếu phát hiện bất kỳ ảnh <strong>Hard Distractor</strong> hoặc <strong>Other Image</strong> nào bên dưới bị sai (ví dụ: chứa vật thể thỏa mãn câu hỏi GT hoặc ảnh lỗi), bấm nút <strong>"🔄 Thay ảnh khác từ Pool"</strong> ngay trên thẻ ảnh đó.<br>
+              • Hệ thống cung cấp một <strong>Pool ảnh ứng viên hợp lệ</strong> để bạn chọn ảnh thay thế và tự động cập nhật trên mọi Pool (N=5, N=10, N=20).
+            </div>
+
+            <div>
+              <label style="font-size:0.76rem; color:var(--text-muted); font-weight:600; display:block; margin-bottom:0.25rem;">
+                Ghi chú / Giải thích lỗi ảnh ngoài GT (tùy chọn):
+              </label>
+              <textarea id="non-gt-explanation" class="input-ctrl" rows="2" placeholder="Nhập ghi chú về ảnh distractor/other bị sai (nếu có)..."></textarea>
+            </div>
+
+            <div id="replacement-history-box" style="display:none;" class="sub-panel">
+              <div class="sub-panel-title">Lịch sử thay thế ảnh ngoài GT trong sample này</div>
+              <div id="replacement-history-list" style="font-size:0.76rem; color:#cbd5e1; display:flex; flex-direction:column; gap:0.25rem;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GROUND TRUTH IMAGES SECTION -->
+      <section>
+        <div class="section-header">
+          <div class="section-title">
+            <span>🎯 Ground Truth Images (Ảnh Đáp Án)</span>
+            <span class="stat-pill" id="gt-section-count">K = 0</span>
+          </div>
+          <div style="font-size:0.8rem; color:var(--text-muted);">
+            Click vào ảnh gốc hoặc ảnh Crop để phóng to độ phân giải cao · Có thể tick chọn/bỏ chọn ảnh GT đúng hoặc sửa trực tiếp Attribute
+          </div>
+        </div>
+        <div class="images-grid" id="gt-images-grid" style="margin-top:0.85rem;"></div>
+      </section>
+
+      <!-- NON-GT (DISTRACTORS & OTHER) SECTION -->
+      <section>
+        <div class="section-header">
+          <div class="section-title">
+            <span>🛡️ Các Ảnh Khác Ngoài GT (Hard Distractors & Other Images)</span>
+            <span class="stat-pill" id="non-gt-section-count">0 ảnh</span>
+          </div>
+          <div style="display:flex; gap:0.45rem;">
+            <button class="btn btn-outline" id="pool-filter-all" onclick="setPoolFilter('ALL')">Tất cả (N=20)</button>
+            <button class="btn btn-outline" id="pool-filter-5" onclick="setPoolFilter('N=5')">Pool N=5</button>
+            <button class="btn btn-outline" id="pool-filter-10" onclick="setPoolFilter('N=10')">Pool N=10</button>
+          </div>
+        </div>
+        <div class="images-grid" id="non-gt-images-grid" style="margin-top:0.85rem;"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL 1: REPLACEMENT POOL FOR NON-GT IMAGES -->
+  <div class="modal-backdrop" id="replace-modal" onclick="closeReplaceModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size:1.05rem; font-weight:800;">
+            🔄 Pool Ảnh Thay Thế Cho Ảnh Ngoài GT: <span id="replace-old-id" style="color:var(--accent-orange); font-family:'JetBrains Mono';"></span>
+          </h3>
+          <p style="font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem;">
+            Chọn 1 ảnh hợp lệ bên dưới để thay thế cho ảnh bị sai. Ảnh mới sẽ tự động thay vào đúng vị trí trong Pool N=5, N=10, N=20.
+          </p>
+        </div>
+        <button class="btn btn-outline" onclick="closeReplaceModal()">✕ Đóng</button>
+      </div>
+      <div class="modal-body">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+          <div style="display:flex; gap:0.5rem;">
+            <button class="btn btn-primary" id="tab-cand-hard" onclick="switchCandidateTab('hard')">
+              Hard Distractor Candidates (<span id="cand-hard-count">0</span>)
+            </button>
+            <button class="btn btn-outline" id="tab-cand-other" onclick="switchCandidateTab('other')">
+              Other Image Candidates (<span id="cand-other-count">0</span>)
+            </button>
+          </div>
+          <input type="text" id="replace-note-input" class="input-ctrl" style="max-width:360px;" placeholder="Ghi chú lý do thay ảnh này (tùy chọn)...">
+        </div>
+        <div class="images-grid" id="candidate-pool-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: HIGH-RES IMAGE LIGHTBOX -->
+  <div class="modal-backdrop" id="lightbox-modal" onclick="closeLightbox()">
+    <div style="position:relative; max-width:94vw; max-height:92vh; display:flex; flex-direction:column; align-items:center; gap:0.5rem;" onclick="event.stopPropagation()">
+      <div style="width:100%; display:flex; justify-content:space-between; align-items:center; gap:1rem; background:rgba(17,24,39,0.92); border:1px solid var(--border-subtle); padding:0.45rem 0.85rem; border-radius:8px;">
+        <div style="display:flex; align-items:center; gap:0.85rem;">
+          <span id="lightbox-caption" style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; font-weight:700; color:var(--accent-cyan);"></span>
+          <label id="lightbox-bbox-toggle-wrap" style="display:inline-flex; align-items:center; gap:0.4rem; font-size:0.8rem; font-weight:700; color:#34d399; cursor:pointer;">
+            <input type="checkbox" id="chk-lightbox-bbox" checked style="width:16px; height:16px; accent-color:#10b981; cursor:pointer;" onchange="toggleLightboxBbox(this.checked)">
+            <span>Hiển thị Bounding Box khi phóng to</span>
+          </label>
+        </div>
+        <button class="btn btn-outline" style="padding:0.3rem 0.7rem; font-size:0.78rem;" onclick="closeLightbox()">✕ Đóng (ESC)</button>
+      </div>
+      <div id="lightbox-stage" style="position:relative; display:inline-flex; align-items:center; justify-content:center; max-width:94vw; max-height:84vh;">
+        <img id="lightbox-img" src="" alt="Zoomed" onload="syncBboxOverlay(this)" style="display:block; max-width:94vw; max-height:84vh; width:auto; height:auto; object-fit:contain; border-radius:8px; border:1px solid var(--border-subtle); background:#000;">
+        <svg id="lightbox-svg" class="bbox-overlay" viewBox="0 0 1 1" preserveAspectRatio="none"></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Đã lưu thành công!</div>
+
+  <script>
+    let SAMPLES_SUMMARY = [];
+    let CURRENT_SAMPLE = null;
+    let CURRENT_INDEX = 0;
+    let POOL_FILTER = 'ALL';
+
+    // Replacement modal state
+    let REPLACE_TARGET_OLD_ID = null;
+    let REPLACE_POOL_DATA = { hard_distractor_candidates: [], other_image_candidates: [] };
+    let REPLACE_ACTIVE_TAB = 'hard';
+
+    async function init() {
+      await loadSamplesSummary();
+      if (SAMPLES_SUMMARY.length > 0) {
+        await selectSampleById(SAMPLES_SUMMARY[0].sample_id, 0);
+      }
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeLightbox();
+          closeReplaceModal();
+        }
+      });
+      window.addEventListener('resize', () => {
+        syncAllBboxOverlays();
+      });
+    }
+
+    function buildSvgRectsHtml(bboxes, strokeColor = '#10b981') {
+      return (bboxes || []).map(b => {
+        const [xmin, ymin, xmax, ymax] = b.bbox_norm || [0, 0, 0, 0];
+        const w = Math.max(0.001, xmax - xmin);
+        const h = Math.max(0.001, ymax - ymin);
+        return `
+          <rect x="${xmin}" y="${ymin}" width="${w}" height="${h}" fill="none" stroke="rgba(0,0,0,0.75)" stroke-width="4.5" vector-effect="non-scaling-stroke" />
+          <rect x="${xmin}" y="${ymin}" width="${w}" height="${h}" fill="none" stroke="${strokeColor}" stroke-width="2.2" vector-effect="non-scaling-stroke" />
+        `;
+      }).join('');
+    }
+
+    function syncBboxOverlay(imgEl) {
+      if (!imgEl || !imgEl.naturalWidth || !imgEl.naturalHeight) return;
+      const container = imgEl.parentElement;
+      if (!container) return;
+      const svg = container.querySelector('.bbox-overlay');
+      if (!svg) return;
+      const cw = imgEl.clientWidth;
+      const ch = imgEl.clientHeight;
+      if (!cw || !ch) return;
+      const scale = Math.min(cw / imgEl.naturalWidth, ch / imgEl.naturalHeight);
+      const rw = imgEl.naturalWidth * scale;
+      const rh = imgEl.naturalHeight * scale;
+      const ox = imgEl.offsetLeft + (cw - rw) / 2;
+      const oy = imgEl.offsetTop + (ch - rh) / 2;
+      svg.style.left = `${ox}px`;
+      svg.style.top = `${oy}px`;
+      svg.style.width = `${rw}px`;
+      svg.style.height = `${rh}px`;
+    }
+
+    function syncAllBboxOverlays() {
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.img-container img, #lightbox-img').forEach(img => {
+          if (img.complete && img.naturalWidth > 0) {
+            syncBboxOverlay(img);
+          }
+        });
+      });
+    }
+
+    function showToast(msg, bg = '#059669') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.background = bg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2600);
+    }
+
+    async function loadSamplesSummary() {
+      const res = await fetch('/api/samples');
+      const data = await res.json();
+      SAMPLES_SUMMARY = data.samples || [];
+      const sc = data.status_counts || {};
+      document.getElementById('stat-total').textContent = data.total || 0;
+      document.getElementById('stat-pass').textContent = sc.pass || 0;
+      document.getElementById('stat-fixed').textContent = sc.fixed || 0;
+      document.getElementById('stat-nogt').textContent = sc.no_valid_gt || 0;
+      document.getElementById('stat-pending').textContent = sc.pending || 0;
+      renderSidebar();
+    }
+
+    function renderSidebar() {
+      const listEl = document.getElementById('sample-list');
+      const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+      const stFilter = document.getElementById('filter-status').value;
+      const kFilter = document.getElementById('filter-k').value;
+
+      listEl.innerHTML = '';
+      SAMPLES_SUMMARY.forEach((s, idx) => {
+        if (stFilter !== 'all' && s.status !== stFilter) return;
+        if (kFilter !== 'all' && String(s.K) !== kFilter) return;
+        if (q && !s.sample_id.toLowerCase().includes(q) && !s.target_object.toLowerCase().includes(q) && !s.question.toLowerCase().includes(q)) {
+          return;
+        }
+
+        const li = document.createElement('li');
+        const isActive = CURRENT_SAMPLE && CURRENT_SAMPLE.sample_id === s.sample_id;
+        li.className = `sample-item ${isActive ? 'active' : ''}`;
+        li.onclick = () => selectSampleById(s.sample_id, idx);
+
+        const statusLabels = {
+          pending: 'PENDING',
+          pass: 'PASS',
+          fixed: 'FIXED',
+          no_valid_gt: '0 GT',
+        };
+
+        li.innerHTML = `
+          <div class="sample-item-top">
+            <span class="sample-id">${s.sample_id}</span>
+            <span class="status-badge status-${s.status}">${statusLabels[s.status] || s.status}</span>
+          </div>
+          <div style="font-weight:700; font-size:0.9rem;">${s.target_object}</div>
+          <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">
+            <span class="tag-sm">K=${s.K}</span>
+            <span class="tag-sm">${s.condition_type}=${s.condition_value}</span>
+            <span class="tag-sm">→ ${s.target_attribute_type}</span>
+          </div>
+        `;
+        listEl.appendChild(li);
+      });
+    }
+
+    async function selectSampleById(sampleId, idx = null) {
+      if (idx !== null) CURRENT_INDEX = idx;
+      else {
+        const foundIdx = SAMPLES_SUMMARY.findIndex(x => x.sample_id === sampleId);
+        if (foundIdx >= 0) CURRENT_INDEX = foundIdx;
+      }
+      const res = await fetch(`/api/sample/${sampleId}`);
+      CURRENT_SAMPLE = await res.json();
+      renderSidebar();
+      renderCurrentSample();
+    }
+
+    function navSample(delta) {
+      if (!SAMPLES_SUMMARY.length) return;
+      const nextIdx = Math.max(0, Math.min(SAMPLES_SUMMARY.length - 1, CURRENT_INDEX + delta));
+      selectSampleById(SAMPLES_SUMMARY[nextIdx].sample_id, nextIdx);
+    }
+
+    function renderCurrentSample() {
+      const s = CURRENT_SAMPLE;
+      if (!s) return;
+      const rev = s.review || {};
+
+      // 1. Render Query Banner
+      const bannerEl = document.getElementById('query-banner');
+      bannerEl.innerHTML = `
+        <div class="banner-top">
+          <div>
+            <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem;">
+              <span class="sample-id" style="font-size:0.9rem;">${s.sample_id}</span>
+              <span class="status-badge status-${rev.status || 'pending'}">${(rev.status || 'pending').toUpperCase()}</span>
+            </div>
+            <div class="query-title" id="banner-question">${s.query.question}</div>
+          </div>
+        </div>
+        <div class="query-details">
+          <div>Target Object: <strong>${s.query.target_object}</strong></div>
+          <div>Condition: <strong>${s.query.condition_attribute.type} = "${s.query.condition_attribute.value}"</strong></div>
+          <div>Target Attribute: <strong>${s.query.target_attribute_type}</strong></div>
+          <div>Gold Images: <strong>K = ${s.K_gt_images}</strong></div>
+        </div>
+        <div class="answer-box">
+          <div><strong>Ground Truth Answer:</strong> <span id="banner-freeform">${s.answer.freeform}</span></div>
+          <div style="font-family:'JetBrains Mono'; font-size:0.8rem;">List: [${s.answer.list.map(v => `"${v}"`).join(', ')}]</div>
+        </div>
+      `;
+
+      // 2. Populate Case 1 (GT Group Error)
+      const hasGtErr = Boolean(rev.has_gt_error);
+      document.getElementById('chk-gt-error').checked = hasGtErr;
+      document.getElementById('gt-error-explanation').value = rev.gt_error_explanation || '';
+      document.getElementById('chk-no-valid-gt').checked = Boolean(rev.no_valid_gt_images);
+
+      // Populate manual query editors
+      const stableAttrs = (s.schema_spec && s.schema_spec.stable_attributes) || ['color', 'shape', 'material', 'pattern'];
+      const condTypeSel = document.getElementById('edit-cond-type');
+      const tgtTypeSel = document.getElementById('edit-target-type');
+      condTypeSel.innerHTML = stableAttrs.map(a => `<option value="${a}" ${a === s.query.condition_attribute.type ? 'selected' : ''}>${a}</option>`).join('');
+      tgtTypeSel.innerHTML = stableAttrs.map(a => `<option value="${a}" ${a === s.query.target_attribute_type ? 'selected' : ''}>${a}</option>`).join('');
+      document.getElementById('edit-cond-val').value = s.query.condition_attribute.value || '';
+      document.getElementById('edit-question-text').value = s.query.question || '';
+      document.getElementById('edit-answer-list').value = (s.answer.list || []).join(', ');
+      document.getElementById('edit-answer-freeform').value = s.answer.freeform || '';
+
+      const errType = rev.gt_error_type || 'attribute_wrong';
+      setGtErrorType(errType, false);
+      onToggleGtError(false);
+
+      // 3. Populate Case 2 (Non-GT Error)
+      const hasNonGtErr = Boolean(rev.has_non_gt_error);
+      document.getElementById('chk-non-gt-error').checked = hasNonGtErr;
+      document.getElementById('non-gt-explanation').value = rev.non_gt_explanation || '';
+      onToggleNonGtError();
+
+      const hist = rev.replaced_non_gt_history || [];
+      document.getElementById('non-gt-replace-count').textContent = `Đã thay: ${hist.length} ảnh`;
+      const histBox = document.getElementById('replacement-history-box');
+      const histList = document.getElementById('replacement-history-list');
+      if (hist.length > 0) {
+        histBox.style.display = 'flex';
+        histList.innerHTML = hist.map(h => `
+          <div>• Đã thay <code style="color:#fca5a5;">${h.old_image_id}</code> ➔ <code style="color:#6ee7b7;">${h.new_image_id}</code> (${h.new_role}) ${h.note ? '– ' + h.note : ''}</div>
+        `).join('');
+      } else {
+        histBox.style.display = 'none';
+      }
+
+      // 4. Render Suggestions
+      renderSuggestions(s.question_suggestions || []);
+
+      // 5. Render GT Images & Non-GT Images
+      renderGtImages();
+      renderNonGtImages();
+    }
+
+    function onToggleGtError(autoDefaultType = true) {
+      const checked = document.getElementById('chk-gt-error').checked;
+      const box = document.getElementById('case1-box');
+      const ctrl = document.getElementById('gt-error-controls');
+      box.classList.toggle('active-error', checked);
+      ctrl.style.display = checked ? 'flex' : 'none';
+      if (checked && autoDefaultType && !CURRENT_SAMPLE.review.gt_error_type) {
+        setGtErrorType('attribute_wrong');
+      }
+    }
+
+    function setGtErrorType(type, markChecked = true) {
+      if (!CURRENT_SAMPLE) return;
+      CURRENT_SAMPLE.review.gt_error_type = type;
+      if (markChecked) {
+        document.getElementById('chk-gt-error').checked = true;
+        onToggleGtError(false);
+      }
+
+      document.getElementById('btn-err-attr').classList.toggle('active', type === 'attribute_wrong');
+      document.getElementById('btn-err-q').classList.toggle('active', type === 'question_wrong');
+      document.getElementById('btn-err-both').classList.toggle('active', type === 'both_wrong');
+
+      const p11 = document.getElementById('subpanel-1-1');
+      const p12 = document.getElementById('subpanel-1-2');
+
+      if (type === 'attribute_wrong') {
+        p11.style.display = 'flex';
+        p12.style.display = 'none';
+      } else if (type === 'question_wrong') {
+        p11.style.display = 'none';
+        p12.style.display = 'flex';
+      } else {
+        // both_wrong: show both 1.1 and 1.2 simultaneously!
+        p11.style.display = 'flex';
+        p12.style.display = 'flex';
+      }
+    }
+
+    function onToggleNonGtError() {
+      const checked = document.getElementById('chk-non-gt-error').checked;
+      document.getElementById('case2-box').classList.toggle('active-error', checked);
+    }
+
+    function onToggleNoValidGt() {
+      const noGt = document.getElementById('chk-no-valid-gt').checked;
+      CURRENT_SAMPLE.review.no_valid_gt_images = noGt;
+      if (noGt) {
+        CURRENT_SAMPLE.review.kept_gt_image_ids = [];
+      } else {
+        CURRENT_SAMPLE.review.kept_gt_image_ids = CURRENT_SAMPLE.ground_truth.map(g => g.image_id);
+      }
+      renderGtImages();
+    }
+
+    function selectAllGt(keepAll) {
+      if (!CURRENT_SAMPLE) return;
+      document.getElementById('chk-no-valid-gt').checked = !keepAll;
+      CURRENT_SAMPLE.review.no_valid_gt_images = !keepAll;
+      CURRENT_SAMPLE.review.kept_gt_image_ids = keepAll ? CURRENT_SAMPLE.ground_truth.map(g => g.image_id) : [];
+      renderGtImages();
+      refreshSuggestions();
+    }
+
+    function toggleKeepGtImage(imgId) {
+      if (!CURRENT_SAMPLE) return;
+      let kept = new Set(CURRENT_SAMPLE.review.kept_gt_image_ids || CURRENT_SAMPLE.ground_truth.map(g => g.image_id));
+      if (kept.has(imgId)) kept.delete(imgId);
+      else kept.add(imgId);
+
+      const arr = Array.from(kept);
+      CURRENT_SAMPLE.review.kept_gt_image_ids = arr;
+      const isZero = arr.length === 0;
+      CURRENT_SAMPLE.review.no_valid_gt_images = isZero;
+      document.getElementById('chk-no-valid-gt').checked = isZero;
+
+      // Auto enable GT Error if user unchecks a GT image
+      if (arr.length < CURRENT_SAMPLE.ground_truth.length && !document.getElementById('chk-gt-error').checked) {
+        document.getElementById('chk-gt-error').checked = true;
+        setGtErrorType('attribute_wrong');
+      }
+
+      recomputeAnswerFromKeptGt();
+      renderGtImages();
+      refreshSuggestions();
+    }
+
+    function onEditGtBboxAttr(imgId, bboxIdx, attrName, newVal) {
+      if (!CURRENT_SAMPLE) return;
+      const gtObj = CURRENT_SAMPLE.ground_truth.find(g => g.image_id === imgId);
+      if (!gtObj || !gtObj.gt_bboxes[bboxIdx]) return;
+      if (!gtObj.gt_bboxes[bboxIdx].attributes) gtObj.gt_bboxes[bboxIdx].attributes = {};
+      gtObj.gt_bboxes[bboxIdx].attributes[attrName] = newVal || null;
+
+      if (!document.getElementById('chk-gt-error').checked) {
+        document.getElementById('chk-gt-error').checked = true;
+        setGtErrorType('attribute_wrong');
+      }
+      recomputeAnswerFromKeptGt();
+      refreshSuggestions();
+    }
+
+    async function recomputeAnswerFromKeptGt() {
+      if (!CURRENT_SAMPLE) return;
+      const keptSet = new Set(CURRENT_SAMPLE.review.kept_gt_image_ids || []);
+      const tgtType = document.getElementById('edit-target-type').value || CURRENT_SAMPLE.query.target_attribute_type;
+      const condType = document.getElementById('edit-cond-type').value || CURRENT_SAMPLE.query.condition_attribute.type;
+      const condVal = document.getElementById('edit-cond-val').value || CURRENT_SAMPLE.query.condition_attribute.value;
+
+      const vals = new Set();
+      CURRENT_SAMPLE.ground_truth.forEach(g => {
+        if (!keptSet.has(g.image_id)) return;
+        (g.gt_bboxes || []).forEach(b => {
+          const v = (b.attributes || {})[tgtType];
+          if (v && v !== 'null') vals.add(String(v).trim().toLowerCase());
+        });
+      });
+      const valList = Array.from(vals).sort();
+      if (valList.length > 0) {
+        const res = await fetch('/api/format_qa', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            target_object: CURRENT_SAMPLE.query.target_object,
+            condition_type: condType,
+            condition_value: condVal,
+            target_attribute_type: tgtType,
+            values: valList,
+          })
+        });
+        const qa = await res.json();
+        document.getElementById('edit-question-text').value = qa.question;
+        document.getElementById('edit-answer-list').value = valList.join(', ');
+        document.getElementById('edit-answer-freeform').value = qa.answer_freeform;
+      }
+    }
+
+    async function onChangeManualQueryAttrs() {
+      await recomputeAnswerFromKeptGt();
+    }
+
+    async function onEditAnswerList() {
+      if (!CURRENT_SAMPLE) return;
+      const rawList = document.getElementById('edit-answer-list').value.split(',').map(x => x.trim()).filter(Boolean);
+      const tgtType = document.getElementById('edit-target-type').value;
+      const condType = document.getElementById('edit-cond-type').value;
+      const condVal = document.getElementById('edit-cond-val').value;
+      if (rawList.length > 0) {
+        const res = await fetch('/api/format_qa', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            target_object: CURRENT_SAMPLE.query.target_object,
+            condition_type: condType,
+            condition_value: condVal,
+            target_attribute_type: tgtType,
+            values: rawList,
+          })
+        });
+        const qa = await res.json();
+        document.getElementById('edit-answer-freeform').value = qa.answer_freeform;
+      }
+    }
+
+    async function refreshSuggestions() {
+      if (!CURRENT_SAMPLE) return;
+      const res = await fetch(`/api/sample/${CURRENT_SAMPLE.sample_id}/compute_suggestions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ground_truth: CURRENT_SAMPLE.ground_truth,
+          kept_gt_image_ids: CURRENT_SAMPLE.review.kept_gt_image_ids,
+          condition_type: document.getElementById('edit-cond-type').value,
+          condition_value: document.getElementById('edit-cond-val').value,
+          target_attribute_type: document.getElementById('edit-target-type').value,
+        })
+      });
+      const data = await res.json();
+      CURRENT_SAMPLE.question_suggestions = data.suggestions || [];
+      renderSuggestions(CURRENT_SAMPLE.question_suggestions);
+    }
+
+    function renderSuggestions(suggestions) {
+      const container = document.getElementById('suggestions-list');
+      if (!suggestions || suggestions.length === 0) {
+        container.innerHTML = `<div style="font-size:0.78rem; color:var(--text-muted);">Không tìm thấy đề xuất tự động nào cho tập ảnh GT hiện tại. Bạn có thể chỉnh sửa trực tiếp câu hỏi bên dưới.</div>`;
+        return;
+      }
+
+      container.innerHTML = '';
+      suggestions.forEach((sug, idx) => {
+        const div = document.createElement('div');
+        div.className = 'suggestion-item';
+        const isCurr = sug.is_current_query ? ' <span class="tag-sm" style="color:#fbbf24;">(Condition/Target hiện tại)</span>' : '';
+        div.innerHTML = `
+          <div class="suggestion-meta">
+            <div style="font-weight:700; color:#fff;">${sug.question}${isCurr}</div>
+            <div style="font-size:0.74rem; color:var(--text-muted);">
+              Condition: <strong>${sug.condition_attribute_type}="${sug.condition_attribute_value}"</strong> ·
+              Target: <strong>${sug.target_attribute_type}</strong> ·
+              Answer: <strong style="color:#6ee7b7;">[${sug.answer.list.join(', ')}]</strong>
+            </div>
+            <div style="font-size:0.72rem; color:#93c5fd;">
+              Ảnh GT thỏa mãn: ${sug.retained_image_ids.join(', ')}
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <span class="retain-badge">Giữ lại ${sug.retained_count}/${sug.total_active_gt} ảnh GT</span>
+            <button type="button" class="btn btn-primary" style="padding:0.32rem 0.65rem; font-size:0.74rem;" onclick="applySuggestion(${idx})">
+              Áp dụng
+            </button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function applySuggestion(idx) {
+      const sug = (CURRENT_SAMPLE.question_suggestions || [])[idx];
+      if (!sug) return;
+      document.getElementById('edit-cond-type').value = sug.condition_attribute_type;
+      document.getElementById('edit-cond-val').value = sug.condition_attribute_value;
+      document.getElementById('edit-target-type').value = sug.target_attribute_type;
+      document.getElementById('edit-question-text').value = sug.question;
+      document.getElementById('edit-answer-list').value = sug.answer.list.join(', ');
+      document.getElementById('edit-answer-freeform').value = sug.answer.freeform;
+
+      // Also update kept GT images to match the retained images of this suggestion
+      CURRENT_SAMPLE.review.kept_gt_image_ids = [...sug.retained_image_ids];
+      CURRENT_SAMPLE.review.no_valid_gt_images = false;
+      document.getElementById('chk-no-valid-gt').checked = false;
+      renderGtImages();
+      showToast(`Đã áp dụng câu hỏi đề xuất (giữ lại ${sug.retained_count} ảnh GT)!`, '#2563eb');
+    }
+
+    function renderGtImages() {
+      const s = CURRENT_SAMPLE;
+      const grid = document.getElementById('gt-images-grid');
+      grid.innerHTML = '';
+
+      const keptSet = new Set(s.review.kept_gt_image_ids || []);
+      const totalGt = s.ground_truth.length;
+      document.getElementById('gt-kept-summary').textContent = `Đang giữ: ${keptSet.size}/${totalGt} ảnh GT`;
+      document.getElementById('gt-section-count').textContent = `Giữ ${keptSet.size} / ${totalGt} ảnh`;
+
+      const stableAttrs = (s.schema_spec && s.schema_spec.stable_attributes) || ['color', 'shape', 'material', 'pattern'];
+      const allowedVals = (s.schema_spec && s.schema_spec.allowed_values) || {};
+
+      s.ground_truth.forEach((gtImg) => {
+        const isKept = keptSet.has(gtImg.image_id) && !s.review.no_valid_gt_images;
+        const card = document.createElement('div');
+        card.className = `image-card ${isKept ? 'gold-kept' : 'gold-dropped'}`;
+
+        const bboxes = gtImg.gt_bboxes || [];
+        const svgRects = buildSvgRectsHtml(bboxes, '#10b981');
+
+        const cropsHtml = bboxes.map((b, bIdx) => {
+          const attrs = b.attributes || {};
+          const attrInputsHtml = stableAttrs.map(cat => {
+            const curVal = attrs[cat] || '';
+            const opts = allowedVals[cat] || [];
+            if (opts.length > 0) {
+              const allOpts = ['', ...opts];
+              if (curVal && !allOpts.includes(curVal)) allOpts.push(curVal);
+              return `
+                <div class="attr-field">
+                  <label>${cat}</label>
+                  <select onchange="onEditGtBboxAttr('${gtImg.image_id}', ${bIdx}, '${cat}', this.value)">
+                    ${allOpts.map(o => `<option value="${o}" ${o === curVal ? 'selected' : ''}>${o || '(null)'}</option>`).join('')}
+                  </select>
+                </div>
+              `;
+            } else {
+              return `
+                <div class="attr-field">
+                  <label>${cat}</label>
+                  <input type="text" value="${curVal}" onchange="onEditGtBboxAttr('${gtImg.image_id}', ${bIdx}, '${cat}', this.value)">
+                </div>
+              `;
+            }
+          }).join('');
+
+          return `
+            <div class="crop-row">
+              <div class="crop-thumb" onclick="openLightbox('${b.crop_url || gtImg.img_url}', [], '#10b981', 'Crop: ${b.bbox_id}')" title="Click để phóng to Crop">
+                <img src="${b.crop_url || gtImg.img_url}" alt="Crop">
+              </div>
+              <div style="flex:1; display:flex; flex-direction:column; gap:0.35rem;">
+                <div style="display:flex; justify-content:space-between; font-size:0.74rem; font-weight:700; color:#34d399;">
+                  <span>Bbox: ${b.bbox_id}</span>
+                  <span>Area: ${(b.area_ratio * 100).toFixed(3)}% (&lt;0.1%)</span>
+                </div>
+                <div class="attr-edit-grid">${attrInputsHtml}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <span class="role-badge badge-gold">Ground Truth</span>
+              <span style="font-family:'JetBrains Mono'; font-weight:700;">${gtImg.image_id}</span>
+            </div>
+            <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-weight:700; color:${isKept ? '#34d399' : '#f87171'};">
+              <input type="checkbox" ${isKept ? 'checked' : ''} style="width:16px; height:16px; accent-color:#10b981;" onchange="toggleKeepGtImage('${gtImg.image_id}')">
+              <span>${isKept ? 'Giữ ảnh GT này (Đúng)' : 'Đã loại bỏ (Sai)'}</span>
+            </label>
+          </div>
+          <div class="img-container" onclick="openLightboxForGt('${gtImg.image_id}')">
+            <img src="${gtImg.img_url}" alt="${gtImg.image_id}" loading="lazy" onload="syncBboxOverlay(this)">
+            <svg class="bbox-overlay" viewBox="0 0 1 1" preserveAspectRatio="none">${svgRects}</svg>
+          </div>
+          <div class="crop-panel">${cropsHtml}</div>
+          <div class="card-footer">
+            <span>Resolution: ${gtImg.resolution?.width || '?'} × ${gtImg.resolution?.height || '?'} px</span>
+            <button type="button" class="btn btn-outline" style="padding:0.2rem 0.55rem; font-size:0.72rem;" onclick="openLightboxForGt('${gtImg.image_id}')">🔍 Phóng to ảnh gốc</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      syncAllBboxOverlays();
+    }
+
+    function setPoolFilter(filterVal) {
+      POOL_FILTER = filterVal;
+      renderNonGtImages();
+    }
+
+    function renderNonGtImages() {
+      const s = CURRENT_SAMPLE;
+      const grid = document.getElementById('non-gt-images-grid');
+      grid.innerHTML = '';
+
+      const allNonGt = (s.non_gt_images || []).filter(item => {
+        if (POOL_FILTER === 'ALL') return true;
+        return (item.pools_in || []).includes(POOL_FILTER);
+      });
+
+      document.getElementById('non-gt-section-count').textContent = `${allNonGt.length} ảnh`;
+
+      allNonGt.forEach(item => {
+        const isHard = item.role === 'hard_distractor';
+        const card = document.createElement('div');
+        card.className = `image-card ${isHard ? 'distractor-card' : 'other-card'}`;
+
+        const bboxes = item.target_obj_bboxes || [];
+        const svgRects = buildSvgRectsHtml(bboxes, '#f59e0b');
+
+        const bboxSummaryHtml = bboxes.length > 0 ? `
+          <div class="crop-panel">
+            ${bboxes.slice(0, 2).map(b => `
+              <div class="crop-row">
+                ${b.crop_url ? `<div class="crop-thumb" style="border-color:var(--accent-orange); width:68px; height:48px;" onclick="openLightbox('${b.crop_url}', [], '#f59e0b', 'Crop: ${b.bbox_id || item.image_id}')"><img src="${b.crop_url}"></div>` : ''}
+                <div style="font-size:0.7rem; color:#cbd5e1;">
+                  <div style="color:#fbbf24; font-weight:700;">${s.query.target_object} (${b.size_category}, ${(b.area_ratio*100).toFixed(2)}%)</div>
+                  <div>Attributes: ${JSON.stringify(b.attributes || {})}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : '';
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div style="display:flex; align-items:center; gap:0.45rem;">
+              <span class="role-badge ${isHard ? 'badge-hard' : 'badge-other'}">${isHard ? 'Hard Distractor' : 'Other Image'}</span>
+              <span style="font-family:'JetBrains Mono'; font-weight:700;">${item.image_id}</span>
+            </div>
+            <div style="display:flex; gap:0.25rem;">
+              ${(item.pools_in || []).map(p => `<span class="tag-sm">${p}</span>`).join('')}
+            </div>
+          </div>
+          <div class="img-container" onclick="openLightboxForNonGt('${item.image_id}')">
+            <img src="${item.img_url}" alt="${item.image_id}" loading="lazy" onload="syncBboxOverlay(this)">
+            <svg class="bbox-overlay" viewBox="0 0 1 1" preserveAspectRatio="none">${svgRects}</svg>
+          </div>
+          ${bboxSummaryHtml}
+          <div class="card-footer">
+            <span style="flex:1;">${item.reason || ''}</span>
+            <button type="button" class="btn btn-warning" style="padding:0.32rem 0.65rem; font-size:0.74rem; flex-shrink:0;" onclick="openReplaceModal('${item.image_id}', '${item.role}')">
+              🔄 Ảnh sai → Thay ảnh khác
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      syncAllBboxOverlays();
+    }
+
+    async function openReplaceModal(oldImgId, currentRole) {
+      if (!CURRENT_SAMPLE) return;
+      REPLACE_TARGET_OLD_ID = oldImgId;
+      document.getElementById('replace-old-id').textContent = `${oldImgId} (${currentRole})`;
+      document.getElementById('replace-note-input').value = '';
+      document.getElementById('candidate-pool-grid').innerHTML = `<div style="padding:2rem; color:var(--text-muted);">Đang tải Pool ảnh thay thế hợp lệ...</div>`;
+      document.getElementById('replace-modal').classList.add('active');
+
+      const condType = document.getElementById('edit-cond-type').value || CURRENT_SAMPLE.query.condition_attribute.type;
+      const condVal = document.getElementById('edit-cond-val').value || CURRENT_SAMPLE.query.condition_attribute.value;
+      const res = await fetch(`/api/sample/${CURRENT_SAMPLE.sample_id}/replacement_pool?cond_type=${encodeURIComponent(condType)}&cond_val=${encodeURIComponent(condVal)}`);
+      REPLACE_POOL_DATA = await res.json();
+
+      document.getElementById('cand-hard-count').textContent = (REPLACE_POOL_DATA.hard_distractor_candidates || []).length;
+      document.getElementById('cand-other-count').textContent = (REPLACE_POOL_DATA.other_image_candidates || []).length;
+
+      switchCandidateTab(currentRole === 'hard_distractor' ? 'hard' : 'other');
+    }
+
+    function closeReplaceModal() {
+      document.getElementById('replace-modal').classList.remove('active');
+      REPLACE_TARGET_OLD_ID = null;
+    }
+
+    function switchCandidateTab(tab) {
+      REPLACE_ACTIVE_TAB = tab;
+      document.getElementById('tab-cand-hard').className = `btn ${tab === 'hard' ? 'btn-primary' : 'btn-outline'}`;
+      document.getElementById('tab-cand-other').className = `btn ${tab === 'other' ? 'btn-primary' : 'btn-outline'}`;
+
+      const list = tab === 'hard'
+        ? (REPLACE_POOL_DATA.hard_distractor_candidates || [])
+        : (REPLACE_POOL_DATA.other_image_candidates || []);
+
+      const grid = document.getElementById('candidate-pool-grid');
+      grid.innerHTML = '';
+
+      if (list.length === 0) {
+        grid.innerHTML = `<div style="padding:1.5rem; color:var(--text-muted);">Không còn ảnh ứng viên nào trong tab này. Hãy chuyển sang tab bên cạnh.</div>`;
+        return;
+      }
+
+      list.forEach((cand, idx) => {
+        const isHard = cand.role === 'hard_distractor';
+        const card = document.createElement('div');
+        card.className = `image-card ${isHard ? 'distractor-card' : 'other-card'}`;
+
+        const bboxes = cand.target_obj_bboxes || [];
+        const svgRects = buildSvgRectsHtml(bboxes, '#f59e0b');
+
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="role-badge ${isHard ? 'badge-hard' : 'badge-other'}">${isHard ? 'Hard Distractor' : 'Other Image'}</span>
+            <span style="font-family:'JetBrains Mono'; font-weight:700;">${cand.image_id}</span>
+          </div>
+          <div class="img-container" onclick="openLightboxForCand('${tab}', ${idx})">
+            <img src="${cand.img_url}" alt="${cand.image_id}" loading="lazy" onload="syncBboxOverlay(this)">
+            <svg class="bbox-overlay" viewBox="0 0 1 1" preserveAspectRatio="none">${svgRects}</svg>
+          </div>
+          <div class="card-footer">
+            <span style="flex:1;">${cand.reason}</span>
+            <button type="button" class="btn btn-success" style="padding:0.32rem 0.7rem; font-size:0.75rem;" onclick="confirmReplaceNonGt('${ tab }', ${idx})">
+              ✓ Chọn thay thế
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+      syncAllBboxOverlays();
+    }
+
+    async function confirmReplaceNonGt(tab, idx) {
+      const list = tab === 'hard'
+        ? (REPLACE_POOL_DATA.hard_distractor_candidates || [])
+        : (REPLACE_POOL_DATA.other_image_candidates || []);
+      const cand = list[idx];
+      if (!cand || !REPLACE_TARGET_OLD_ID) return;
+
+      const note = document.getElementById('replace-note-input').value.trim();
+      const oldId = REPLACE_TARGET_OLD_ID;
+
+      const res = await fetch(`/api/sample/${CURRENT_SAMPLE.sample_id}/replace_non_gt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          old_image_id: oldId,
+          new_image_id: cand.image_id,
+          new_role: cand.role,
+          new_reason: cand.reason,
+          note: note,
+        })
+      });
+      CURRENT_SAMPLE = await res.json();
+      closeReplaceModal();
+      await loadSamplesSummary();
+      renderCurrentSample();
+      showToast(`Đã thay thế ảnh ${oldId} bằng ${cand.image_id}!`);
+    }
+
+    async function quickSavePass() {
+      if (!CURRENT_SAMPLE) return;
+      document.getElementById('chk-gt-error').checked = false;
+      document.getElementById('chk-no-valid-gt').checked = false;
+      CURRENT_SAMPLE.review.no_valid_gt_images = false;
+      await saveCurrentSample('pass');
+    }
+
+    async function saveNoValidGtDirectly() {
+      if (!CURRENT_SAMPLE) return;
+      document.getElementById('chk-gt-error').checked = true;
+      document.getElementById('chk-no-valid-gt').checked = true;
+      CURRENT_SAMPLE.review.no_valid_gt_images = true;
+      CURRENT_SAMPLE.review.kept_gt_image_ids = [];
+      await saveCurrentSample('no_valid_gt');
+    }
+
+    async function saveCurrentSample(forcedStatus = null) {
+      if (!CURRENT_SAMPLE) return;
+      const hasGtError = document.getElementById('chk-gt-error').checked;
+      const gtErrorType = CURRENT_SAMPLE.review.gt_error_type || 'attribute_wrong';
+      const gtExp = document.getElementById('gt-error-explanation').value.trim();
+      const noValidGt = document.getElementById('chk-no-valid-gt').checked;
+
+      const hasNonGtError = document.getElementById('chk-non-gt-error').checked;
+      const nonGtExp = document.getElementById('non-gt-explanation').value.trim();
+
+      const ansList = document.getElementById('edit-answer-list').value
+        .split(',')
+        .map(x => x.trim())
+        .filter(Boolean);
+
+      const payload = {
+        status: forcedStatus,
+        has_gt_error: hasGtError,
+        gt_error_type: hasGtError ? gtErrorType : null,
+        gt_error_explanation: gtExp,
+        no_valid_gt_images: noValidGt,
+        kept_gt_image_ids: noValidGt ? [] : (CURRENT_SAMPLE.review.kept_gt_image_ids || CURRENT_SAMPLE.ground_truth.map(g => g.image_id)),
+        updated_ground_truth: CURRENT_SAMPLE.ground_truth,
+        updated_query: {
+          condition_type: document.getElementById('edit-cond-type').value,
+          condition_value: document.getElementById('edit-cond-val').value.trim(),
+          target_attribute_type: document.getElementById('edit-target-type').value,
+          question: document.getElementById('edit-question-text').value.trim(),
+        },
+        updated_answer: {
+          list: ansList,
+          split_comma: ansList.join(', '),
+          freeform: document.getElementById('edit-answer-freeform').value.trim(),
+        },
+        has_non_gt_error: hasNonGtError,
+        non_gt_explanation: nonGtExp,
+      };
+
+      const res = await fetch(`/api/sample/${CURRENT_SAMPLE.sample_id}/save`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      CURRENT_SAMPLE = await res.json();
+      await loadSamplesSummary();
+      renderCurrentSample();
+      showToast(`Đã lưu sample ${CURRENT_SAMPLE.sample_id} (${CURRENT_SAMPLE.review.status.toUpperCase()})!`);
+    }
+
+    async function resetCurrentSample() {
+      if (!CURRENT_SAMPLE) return;
+      if (!confirm(`Khôi phục sample ${CURRENT_SAMPLE.sample_id} về trạng thái ban đầu?`)) return;
+      const res = await fetch(`/api/sample/${CURRENT_SAMPLE.sample_id}/reset`, { method: 'POST' });
+      CURRENT_SAMPLE = await res.json();
+      await loadSamplesSummary();
+      renderCurrentSample();
+      showToast(`Đã khôi phục sample ${CURRENT_SAMPLE.sample_id} về gốc!`, '#475569');
+    }
+
+    function exportVerifiedJSON() {
+      window.open('/api/export', '_blank');
+    }
+
+    function setCardSize(colsStr) {
+      const root = document.documentElement;
+      const cols = parseInt(colsStr, 10) || 4;
+      root.style.setProperty('--grid-cols', String(cols));
+      const heightMap = {
+        6: '125px',
+        5: '148px',
+        4: '180px',
+        3: '230px',
+        2: '300px',
+      };
+      root.style.setProperty('--img-max-height', heightMap[cols] || '180px');
+      syncAllBboxOverlays();
+    }
+
+    function openLightboxForGt(imageId) {
+      if (!CURRENT_SAMPLE) return;
+      const gtImg = (CURRENT_SAMPLE.ground_truth || []).find(g => g.image_id === imageId);
+      if (!gtImg) return;
+      openLightbox(
+        gtImg.img_url,
+        gtImg.gt_bboxes || [],
+        '#10b981',
+        `Ground Truth: ${gtImg.image_id} (${(gtImg.gt_bboxes || []).length} bbox)`
+      );
+    }
+
+    function openLightboxForNonGt(imageId) {
+      if (!CURRENT_SAMPLE) return;
+      const item = (CURRENT_SAMPLE.non_gt_images || []).find(x => x.image_id === imageId);
+      if (!item) return;
+      const bboxes = item.target_obj_bboxes || [];
+      openLightbox(
+        item.img_url,
+        bboxes,
+        '#f59e0b',
+        `${item.role === 'hard_distractor' ? 'Hard Distractor' : 'Other Image'}: ${item.image_id} (${bboxes.length} bbox)`
+      );
+    }
+
+    function openLightboxForCand(tab, idx) {
+      const list = tab === 'hard'
+        ? (REPLACE_POOL_DATA.hard_distractor_candidates || [])
+        : (REPLACE_POOL_DATA.other_image_candidates || []);
+      const cand = list[idx];
+      if (!cand) return;
+      const bboxes = cand.target_obj_bboxes || [];
+      openLightbox(
+        cand.img_url,
+        bboxes,
+        '#f59e0b',
+        `Candidate (${cand.role}): ${cand.image_id} (${bboxes.length} bbox)`
+      );
+    }
+
+    function toggleLightboxBbox(show) {
+      const svg = document.getElementById('lightbox-svg');
+      if (svg) svg.style.display = show ? 'block' : 'none';
+    }
+
+    function openLightbox(url, bboxes = [], strokeColor = '#10b981', caption = '') {
+      if (!url) return;
+      const imgEl = document.getElementById('lightbox-img');
+      const svgEl = document.getElementById('lightbox-svg');
+      const capEl = document.getElementById('lightbox-caption');
+      const toggleWrap = document.getElementById('lightbox-bbox-toggle-wrap');
+      const chkEl = document.getElementById('chk-lightbox-bbox');
+
+      if (capEl) capEl.textContent = caption || url.split('/').pop();
+
+      const hasBboxes = Array.isArray(bboxes) && bboxes.length > 0;
+      if (toggleWrap) toggleWrap.style.display = hasBboxes ? 'inline-flex' : 'none';
+      if (svgEl) {
+        svgEl.innerHTML = hasBboxes ? buildSvgRectsHtml(bboxes, strokeColor) : '';
+        svgEl.style.display = (hasBboxes && (!chkEl || chkEl.checked)) ? 'block' : 'none';
+      }
+
+      imgEl.src = url;
+      document.getElementById('lightbox-modal').classList.add('active');
+      requestAnimationFrame(() => {
+        if (imgEl.complete && imgEl.naturalWidth > 0) {
+          syncBboxOverlay(imgEl);
+        }
+      });
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.remove('active');
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
